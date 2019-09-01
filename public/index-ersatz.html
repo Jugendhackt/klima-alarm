@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Klima-Alarm</title>
+
+        <!-- Fontawesome -->
+        <link rel="stylesheet" href="fontawesome-free-5.10.2-web/css/all.css">
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.css">
+
+        <!-- jQuery library -->
+        <script src="bib/jquery-3.4.1.js"></script>
+
+        <!-- Popper JS -->
+        <script src="bib/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script> 
+
+
+        <!-- Chart.js -->
+        <script src="bib/moment.js"></script>
+        <script src="Chart.js-2.8.0/samples/utils.js"></script>
+        <link rel="stylesheet" href="Chart.js-2.8.0/dist/Chart.css">
+        <script src="Chart.js-2.8.0/dist/Chart.js"></script>
+
+
+        <!-- Socket.io -->
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!-- own -->
+        <script defer src="myCharts2.js"></script>
+
+        <style>
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+        
+        </style>
+    </head>
+    <body>
+        <header>
+             <!-- A grey horizontal navbar that becomes vertical on small screens -->
+            <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+                <a class="navbar-brand" href="#"> <i class="fa fa-globe-americas"></i> KLIMA-ALARM</a>
+                <!-- Links -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link 3</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">  
+                    <li class="nav-item">
+                        <a id="final-chart-btn" class="btn btn-danger mr-2" data-toggle="pill" role="button" href="#final-charts" onclick="final()">
+                            <span class="spinner-grow spinner-grow-sm"></span>
+                            Final
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="demo-chart-btn" class="btn btn-success active" data-toggle="pill" role="button" href="#demo-charts" onclick="demo()">
+                            <span class="spinner-grow spinner-grow-sm"></span>
+                            Demo
+                        </a>
+                    </li>
+                </ul>
+            </nav> 
+        </header>
+        <main>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3 bg-info">
+
+                        <!-- Sidenav -->
+                        <!-- <div style="position: absolute; top: 0px; left: px; width: 100%; height: 300px; background: url('assets/arduino.jpg');"> -->
+                            <!-- </div> -->
+
+
+                        <div class="container">
+                            
+             
+                                <!-- <a class="navbar-brand" href="#"> -->
+                                    <!-- </a> -->
+                                    
+                            <ul class="list-group mt-4">
+                                <li class="list-group-item active">
+                                        <img src="assets/arduino.jpg" class="rounded-circle" alt="Cinque Terre"> 
+                                    Technologien
+                                </li>
+                                <li class="list-group-item">Arduino UNO</li>
+                                <li class="list-group-item">Raspberry Pi 3</li>
+                                <li class="list-group-item">Node.js</li>
+                                <li class="list-group-item">Websockets (Socket.io)</li>
+                                <li class="list-group-item">Bootstrap 4</li>
+                                <li class="list-group-item">Chart.js</li>
+                            </ul> 
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-sm-9">
+                        <div class="container mt-4">
+                            <h1>Klima-Alarm</h1>
+
+                            <!-- Charts-type picker -->
+                            <ul class="nav nav-tabs mt-4 chart-chose" role="tablist">
+                                <li class="nav-item">
+                                    <!-- <a class="nav-link active" onclick="$('.chart-chose .nav-link').removeClass('active'); $(this).addClass('active'); $('.charts > *').show(); $('.charts > :not(#lineChart)').hide();" href="#lineChart1">Liniendiagramm</a> -->
+                                    <a class="nav-link active" data-toggle="pill" href="#tab-line-chart">Liniendiagramm</a>
+                                </li>
+                                <li class="nav-item">
+                                    <!-- <a class="nav-link" onclick="$('.chart-chose .nav-link').removeClass('active'); $(this).addClass('active'); $('.charts > *').show(); $('.charts > :not(#pieChart)').hide();" href="#pieChart1">Tortendiagramm</a> -->
+                                    <a class="nav-link" data-toggle="pill" href="#tab-pie-chart">Tortendiagramm</a>
+                                </li>
+                            </ul>
+
+                            <!-- Final or Demo Charts -->
+                            <div class="tab-content">
+
+                                <!-- Final Ccharts -->
+                                <div class="container tab-pane fade" id="final-charts">
+                                    <!-- Pie or Line-Chart -->
+                                    <div class="charts tab-content mt-3">
+                                        <div id="tab-line-chart" class="container tab-pane active">
+                                            <canvas id="lineChartFinal" width="300" height="200"></canvas>
+                                        </div>
+                                        <div id="tab-pie-chart" class="container tab-pane fade">
+                                            <!-- <canvas id="pieChart" class="mt-5" width="300" height="200" style="display: none"></canvas> -->
+                                            <canvas id="pieChartFinal" width="300" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Demo charts -->
+                                <div class="container tab-pane active" id="demo-charts">
+                                    <div class="charts tab-content mt-3">
+                                        <!-- Pie or Line Chart -->
+                                        <div id="tab-line-chart" class="container tab-pane active">
+                                            <canvas id="lineChartDemo" width="300" height="200"></canvas>
+                                        </div>
+                                        <div id="tab-pie-chart" class="container tab-pane fade">
+                                            <!-- <canvas id="pieChart" class="mt-5" width="300" height="200" style="display: none"></canvas> -->
+                                            <canvas id="pieChartDemo" width="300" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
